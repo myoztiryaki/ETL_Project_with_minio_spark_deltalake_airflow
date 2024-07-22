@@ -1,7 +1,7 @@
-![logo](https://github.com/myoztiryaki/ETL_Project_with_minio_spark_deltalake_airflow/dataeng10_finalproject.png)
+![logo](/dataeng10_finalproject.png)
 
 Proje adımları ile ilgili detaylı bilgi için lütfen öncelikle Medium makaleme göz atınız. 
-Link:
+Link: https://medium.com/@myoztiryaki/airflow-apache-spark-minio-ve-delta-lake-ile-etl-proje-ad%C4%B1mlar%C4%B1-f3bac4f846b6
 
 Bu projede, TMDB film veri setini kullanarak bir data pipline oluşturulması istenmektedir. Proje kapsamında gerçekleştirilecek adımlar ve kullanılacak teknolojiler şunlardır:
 
