@@ -93,26 +93,25 @@ schema = [
     ("vote_count", "integer")
 ]
 
-#döngü kullanarak her sütunun veri türünü belirlenen şemaya uygun olarak değiştirdim.
+# her sütunun veri türünü belirlenen şemaya uygun olarak değiştir
 for col_name, col_type in schema:
     df_movies_tf = df_movies_tf.withColumn(col_name, col(col_name).cast(col_type))
 
-#tekrarlanan degerler silindi
+# tekrarlanan degerler silindi
 un_df_movies_tf = df_movies_tf.dropDuplicates(['movie_id'])
 
 
-#explode_outer ile iç içe geçmiş arrayi düzleştirdim ve istenen değerleri genres tablosunda gösterdim/ explode_outerda boş veya null durumundaki satırlar korunur
 movies_genres = df_movies.select("movie_id", explode_outer("genres").alias("genres"))
 movies_genres = movies_genres.select("movie_id", "genres.id", "genres.name")
 movies_genres = movies_genres.withColumn("movie_id", col("movie_id").cast("string"))
+
 # id nulls must be imputed with -9999.
 movies_genres = movies_genres.fillna({'id': -9999})
 
-#tekrarlanan degerler silindi
 un_movies_genres = movies_genres.dropDuplicates(['movie_id','id','name'])
 
 
-# keywords tablosu donusuumu
+# keywords tablosu
 movies_keywords = df_movies.select("movie_id", explode_outer("keywords").alias("keywords"))
 movies_keywords = movies_keywords.select("movie_id", "keywords.id", "keywords.name")
 movies_keywords = movies_keywords.withColumn("movie_id", col("movie_id").cast("string"))
@@ -120,7 +119,6 @@ movies_keywords = movies_keywords.withColumn("movie_id", col("movie_id").cast("s
 # id nulls must be imputed with -9999.
 movies_keywords = movies_keywords.fillna({'id': -9999})
 
-#tekrarlanan degerler silindi
 un_movies_keywords = movies_keywords.dropDuplicates(['movie_id', 'id', 'name'])
 
 # production_companies tablosu
@@ -155,10 +153,7 @@ movies_spoken_lang = movies_spoken_lang.withColumn("movie_id", col("movie_id").c
 # id nulls must be imputed with -xx.
 movies_spoken_lang = movies_spoken_lang.fillna({'iso_639_1': 'XX'})
 
-#tekrarlanan degerler silindi
 un_movies_spoken_lang = movies_spoken_lang.dropDuplicates(["movie_id", "iso_639_1"])
-
-
 
 # silver layerdaki  boş tabloları delta formatında oku
 movies_deltaPath = "s3a://tmdb-silver/movies"
@@ -185,22 +180,18 @@ movies_delta.alias("movies") \
     .whenNotMatchedInsertAll() \
     .execute()
 
-
-#xxminio yazdırma
 genres_delta.alias("genres") \
     .merge(un_movies_genres.alias("genres_new"), "genres.movie_id = genres_new.movie_id AND genres.id = genres_new.id") \
     .whenMatchedUpdateAll() \
     .whenNotMatchedInsertAll() \
     .execute()
 
-#xxminio upsert
 keywords_delta.alias("keywords") \
     .merge(un_movies_keywords.alias("keywords_new"), "keywords.movie_id = keywords_new.movie_id AND keywords.id = keywords_new.id") \
     .whenMatchedUpdateAll() \
     .whenNotMatchedInsertAll() \
     .execute()
 
-#xxminio upsert
 prod_comp_delta.alias("prod_comp") \
     .merge(un_movies_prod_comp.alias("prod_comp_new"), "prod_comp.movie_id = prod_comp_new.movie_id AND prod_comp.id = prod_comp_new.id") \
     .whenMatchedUpdateAll() \
@@ -213,7 +204,6 @@ prod_countries_delta.alias("prod_countries") \
     .whenNotMatchedInsertAll() \
     .execute()
 
-#xxminio upsert
 movies_spoken_lang_delta.alias("spoken_lang") \
     .merge(un_movies_spoken_lang.alias("spoken_lang_new"), "spoken_lang.movie_id = spoken_lang_new.movie_id AND spoken_lang.iso_639_1 = spoken_lang_new.iso_639_1") \
     .whenMatchedUpdateAll() \
