@@ -1,3 +1,8 @@
+![logo](https://github.com/myoztiryaki/ETL_Project_with_minio_spark_deltalake_airflow/dataeng10_finalproject.png)
+
+Proje adımları ile ilgili detaylı bilgi için lütfen öncelikle Medium makaleme göz atınız. 
+Link:
+
 Bu projede, TMDB film veri setini kullanarak bir data pipline oluşturulması istenmektedir. Proje kapsamında gerçekleştirilecek adımlar ve kullanılacak teknolojiler şunlardır:
 
 Veri Alımı:
@@ -14,11 +19,6 @@ Bu projenin amacı, ham veri setlerini işleyerek SQL diliyle kolayca sorgulanab
 
 Şemada gösterildiği gibi, veri işleme adımları veri üreticiden MinIO'ya yazma, MinIO'dan Apache Spark ile veri işleme ve sonunda Delta Lake formatında MinIO'ya yazma şeklinde olacaktır.
 Tüm bu işlemler Docker Compose ile konteynerlar üzerinde çalıştırılacaktır.
-
-docker-compose dosyası ve  spark konteynerında gerekli olan kütüphaneleri içeren bir setup.sh dosyası oluştur.
-
-docker-compose.yaml dosyasında airflow, postgres, spark_client ve minio konteynerlerı bulunmakta. 
-
 
 Eğer dosyalarda sorun çıkarsa izinleri kontrol ediniz. 
 sudo chmod 777 movies_to_s3.py
